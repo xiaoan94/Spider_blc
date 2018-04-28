@@ -18,4 +18,7 @@ class IhuopinspiderItem(Item):
     #时间
     time = Field()
     #内容
+    content = Field()
+    #图片
+    picture = Field()
     
