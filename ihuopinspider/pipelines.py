@@ -8,7 +8,7 @@ import json
 
 class IhuopinspiderPipeline(object):
     def __init__(self):
-        self.file = open('spider.json','w')
+        self.file = open('spider.json','a')
         
     def process_item(self, item, spider):
         lin = json.dumps(dict(item), ensure_ascii = False) + '\n'
