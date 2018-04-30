@@ -9,7 +9,7 @@ import requests
 import json
 
 # 设定间隔时间 秒
-inc = 5
+inc = 100000
 
 class main(object):
 
@@ -61,7 +61,7 @@ class main(object):
             # 获得页面代码
             data = r.content
             j_data = json.loads(data)
-            print j_data
+#             print j_data
 
             if "code" in j_data.keys() and j_data.get("code") == 200:
                 all_articles = j_data.get("data", [])
@@ -81,15 +81,16 @@ class main(object):
                     ArticleInfo = article_info.get("ArticleInfo", "No finding the information")
                     Title  = ArticleInfo.get("Title", "No finding the content")
                     ImgUrl = ArticleInfo.get("ImgUrl","No finding the img")
-                    Source = ArticleInfo.get("Source","No finding the source")
+                    UpdateTime = ArticleInfo.get("UpdateTime","No finding the source")
                     Author = ArticleInfo.get("Author","No finding the author")
                     ShortDescription = ArticleInfo.get("ShortDescription", "No finding the description")
                     Url_data = article_info.get("data1", None)
+                    u = "http://m.ihuoqiu.com/article?id=" + str(Url_data)+"&type=1"
                     
                     self.content = {
                         "Title":Title,
                         "ImgUrl":ImgUrl,
-                        "Source":Source,
+                        "UpdateTime":UpdateTime,
                         "Author":Author,
                         "Url_data":Url_data,
                         "ShortDescription":ShortDescription
