@@ -9,7 +9,7 @@ import json
 import re
 import urllib
 from bs4 import BeautifulSoup
-url_data = "ZsdlUYcqmDkfESoyjfGVjA__2C__2C"  #前面获取到的url_data
+url_data = "ARXo5jMpGJErk99__2BF32ZQw__2C__2C"  #前面获取到的url_data
 url = "https://www.ihuoqiu.com/MAPI/GetArticleInfoData"
 headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
@@ -26,9 +26,16 @@ data = '''{Type: "1", data: "%s"}'''%url_data
 # print page.read()
 r = requests.post(url=url,data=data, headers=headers)
 if r.status_code == 200:
-    print r.status_code
     data = r.content
-    print data
+    art_json = json.loads(data)
+    art_content = art_json.get("data", [])
+    art_content_list = art_content.split(',"')
+    print art_content_list[2]                              #文章所在字符
+#     at=all_articles.get("Remark", [])
+
+# for item in all_articles_list:
+#     print item
+
 
 
 # session = requests.session()
