@@ -1,12 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# encoding:utf-8
 
 import scrapy
 from bs4 import BeautifulSoup
+import time
+import sched
 import Queue
 import requests
 import json
 
+# 设定间隔时间 秒
+inc = 5
 
 class main(object):
 
@@ -19,12 +22,25 @@ class main(object):
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
             'Referer': 'http://m.ihuoqiu.com/index',
             'Origin': 'http://m.ihuoqiu.com',
-            'Content-Type': 'application/json;charset=utf-8',
+            'Connection':'keep-alive',
+            'Content-Type':'application/json;charset=utf-8',
         }
+        
+        #设定schedule对象
+        self.schedule = sched.scheduler(time.time, time.sleep) 
 
-        self.title = []  # 存放标题的变量
-
-    def run(self):
+        self.article = []  # 存放标题的变量
+        self.content = {}    # 存放文章内容
+    
+    def perform_command(self,inc):
+        self.schedule.enter(inc,0,self.perform_command,(inc,))
+        self.run_()
+    def timming_exe(self,inc = inc):
+        #enter 用来安排事件的发生
+        self.schedule.enter(inc,0,self.perform_command,(inc,))
+        self.schedule.run()
+        
+    def run_(self):
         # 该线程要执行的任务,即获得url队列,传入页面的url获得页面的代码
         response = None
         content = ''
@@ -45,11 +61,11 @@ class main(object):
             # 获得页面代码
             data = r.content
             j_data = json.loads(data)
-            #print j_data
+            print j_data
 
             if "code" in j_data.keys() and j_data.get("code") == 200:
                 all_articles = j_data.get("data", [])
-                all_articles_list = all_articles[1:-1].split("},{")
+                all_articles_list = all_articles[2:-2].split("},{")
                 ll = []
                 for one in all_articles_list:
                     if one[0] == u"{" and one[-1] != u"}":
@@ -62,18 +78,35 @@ class main(object):
                     ll.append(one)
                 for article_info in ll:
                     #print article_info
-                    ArticleInfo = article_info.get("ArticleInfo", None)
-                    title = ArticleInfo.get("Title", "Error")
-                    ShortDescription = ArticleInfo.get("ShortDescription", "Error")
-                    url_data = article_info.get("data1", None)
-                    self.title.append((title, url_data,ShortDescription))
-            print len(self.title)
+                    ArticleInfo = article_info.get("ArticleInfo", "No finding the information")
+                    Title  = ArticleInfo.get("Title", "No finding the content")
+                    ImgUrl = ArticleInfo.get("ImgUrl","No finding the img")
+                    Source = ArticleInfo.get("Source","No finding the source")
+                    Author = ArticleInfo.get("Author","No finding the author")
+                    ShortDescription = ArticleInfo.get("ShortDescription", "No finding the description")
+                    Url_data = article_info.get("data1", None)
+                    
+                    self.content = {
+                        "Title":Title,
+                        "ImgUrl":ImgUrl,
+                        "Source":Source,
+                        "Author":Author,
+                        "Url_data":Url_data,
+                        "ShortDescription":ShortDescription
+                    }
+                    self.article.append(self.content)
+            
+            print("The length is:",len(self.article))
+#             for i in self.article:
+#                 print(i)
         else:
-            print u"页面加载失败"
+            print(u"页面加载失败")
+            time.sleep(100)
+            self.run()
             return None
 
 
 
 if __name__ == "__main__":
     tit = main()
-    tit.run()
+tit.timming_exe(10)
