@@ -8,21 +8,27 @@ import requests
 import json
 import re
 from bs4 import BeautifulSoup
-url0 = "https://www.7234.cn/news/"
+url0 = "https://www.7234.cn/"
 post_data = {"page": 1}
 url = "https://www.7234.cn/fetch_articles/news?page=%s"%(post_data["page"])
 
-
+fp = open("cont.txt","a")
 res = requests.get(url)
 if res.status_code == 200:
     data = res.content
+    fp.write(data)
     artlist=data.split('article-item')
+#     print artlist
     titlepattern = re.compile("alt=(.*?)src",re.S)
     artinfopattern = re.compile('desc(.*?)div',re.S)
     hrefpattern = re.compile('href=(.*?) target',re.S)
     
     for artitem in artlist[1:-2]:
         titleitem = re.findall(titlepattern,artitem)
+#         print titleitem
         artinfoitem = re.findall(artinfopattern,artitem)
+#         print artinfoitem
         hrefitem = re.findall(hrefpattern,artitem)[0]
-        print hrefitem
+        print hrefitem[3:-2]
+#         print artitem
+#         print hrefitem
