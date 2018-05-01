@@ -31,7 +31,7 @@ class main(object):
             'Origin': 'http://m.ihuoqiu.com',
             'Connection':'keep-alive',
             'Content-Type':'application/json;charset=utf-8',
-        }        
+        }       
         #设定schedule对象
         self.schedule = sched.scheduler(time.time, time.sleep) 
 
