@@ -28,7 +28,8 @@ if response.status_code == 200:
     article_content = article_json.get("data",[])
     art_content_list = article_content.split(',"')
     article = art_content_list[2]
-    pattern = re.compile('img src=.*?(.*?)\" ',re.S)
+    print article
+    pattern = re.compile('img src=(.*?)\" ',re.S)
     item = re.findall(pattern,article)
     print item
     #按照自然段分割

@@ -9,7 +9,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 url0 = "https://www.7234.cn/"
-post_data = {"page": 1}
+post_data = {"page": 1}#数字代表页数，通过改变数字爬取其他野内容
 url = "https://www.7234.cn/fetch_articles/news?page=%s"%(post_data["page"])
 
 fp = open("cont.txt","a")
@@ -28,7 +28,7 @@ if res.status_code == 200:
 #         print titleitem
         artinfoitem = re.findall(artinfopattern,artitem)
 #         print artinfoitem
-        hrefitem = re.findall(hrefpattern,artitem)[0]
+        hrefitem = re.findall(hrefpattern,artitem)[0]#url0+hrefitem是文章正文链接
         print hrefitem[3:-2]
 #         print artitem
 #         print hrefitem

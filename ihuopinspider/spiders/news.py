@@ -12,18 +12,9 @@ import json
 class NewsSpider(scrapy.Spider):
     name = "newscontent"
 #     allowed_domains = ['m.ihuoqiu.com']
-    url = "https://mp.weixin.qq.com/s/hkPP-kTES4-hyMyJPqXS5A"
-#     start_urls = [url ,]
-    def start_requests(self):
-#         url = "https://www.ihuoqiu.com/Home/Index"
-        data = '''{"Type":1,"PageIndex":1,"PageSize":10}'''
-        yield scrapy.FormRequest(
-            url = self.url,
-            method="POST", 
-            body=json.dumps(data), 
-            headers={'Content-Type': 'application/json'},
-            callback = self.parse
-        )
+    url = "https://www.7234.cn/news/"
+    start_urls = [url ,]
+
     def parse(self, response):
         
         
@@ -33,19 +24,19 @@ class NewsSpider(scrapy.Spider):
 # #         print "qweqe标价标价"
 #         
         item = IhuopinspiderItem        
-        res = response.xpath('//*[@id="js_content"]') 
+        res = response.xpath('/html/body/div[2]/div[1]/div[3]/div/div') 
         i = len(res)      
         ll = [] 
-        for num  in range(i):
-            item['title'] = response.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
+        for num  in res:
+            item['title'] = res.xpath('./div[1]/div/div[1]/h3/text()').extract()[0]
             print "继续标记：",item['title']
-            item['author']=response.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
+            item['author']=res.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
             #时间
-            item['time'] = response.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
+            item['time'] = res.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
             #内容
-            item['content'] = response.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
+            item['content'] = res.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
             #图片
-            item['picture'] = response.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
+            item['picture'] = res.xpath('//*[@id="js_content"]/p[num+1]/text()').extract()[0]
             
         
             
