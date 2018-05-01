@@ -30,6 +30,7 @@ if r.status_code == 200:
     art_json = json.loads(data)
     art_content = art_json.get("data", [])
     art_content_list = art_content.split(',"')
+    print art_content_list[1]
     print art_content_list[2]                              #文章所在字符
 #     at=all_articles.get("Remark", [])
 
